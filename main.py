@@ -3,10 +3,12 @@ import sys
 
 from functools import partial
 
-from PyQt5 import uic
 from PyQt5.QtSql import QSqlTableModel, QSqlDatabase
 from PyQt5.QtWidgets import QApplication, QWidget, QPushButton, QLineEdit
 from PyQt5.QtWidgets import QMainWindow
+
+from addEditCoffeeForm_ui import SecondFormUi
+from main_ui import FirstFormUi
 
 # Коды операций
 ADD = 0
@@ -14,10 +16,10 @@ DELETE = 1
 CHANGE = 2
 
 
-class FirstForm(QMainWindow):
+class FirstForm(QMainWindow, FirstFormUi):
     def __init__(self):
         super().__init__()
-        uic.loadUi('main.ui', self)
+        self.setupUi(self)
         self.initUI()
 
     def initUI(self):
@@ -32,7 +34,7 @@ class FirstForm(QMainWindow):
 
     def load_table(self):
         self.db = QSqlDatabase.addDatabase('QSQLITE')
-        self.db.setDatabaseName('coffee.sqlite')
+        self.db.setDatabaseName('data/coffee.sqlite')
         self.db.open()
 
         model = QSqlTableModel(self, self.db)
@@ -46,12 +48,12 @@ class FirstForm(QMainWindow):
         self.second_form.show()
 
 
-class SecondForm(QWidget):
+class SecondForm(QWidget, SecondFormUi):
     def __init__(self, first_form, mode):
         super().__init__()
-        uic.loadUi('addEditCoffeeForm.ui', self)
+        self.setupUi(self)
         self.first_form = first_form
-        self.con = sqlite3.connect("coffee.sqlite")
+        self.con = sqlite3.connect("data/coffee.sqlite")
         self.initUI(mode)
 
     def initUI(self, mode):
